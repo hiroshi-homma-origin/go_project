@@ -11,6 +11,7 @@ import (
 
 var count = 0
 var count1 = 0
+var max = 0
 var countStr = ""
 var whenText = ""
 var whereText = ""
@@ -38,23 +39,21 @@ func bulkUpdate(a []string, pc *sql.DB) {
 	count++
 	whenText = whenText + "when '" + a[0] + "' then '" + a[1] + "' \n"
 	switch count {
-	case 1, 10001, 20001, 30001, 40001, 50001, 60001, 70001, 80001, 90001, 100001, 110001, 120001, 130001, 140001, 150001, 160001, 170001, 180001, 190001, 200001, 210001, 220001, 230001, 240001, 250001, 260001, 270001, 280001, 290001:
+	case 115000, 30001, 45001, 60001, 75001, 90001, 105001, 120001, 135001, 150001, 165001, 180001, 195001, 210001, 225001, 240001, 255001, 270001, 285001, 300001:
 		whereText = whereText + "('" + a[0] + "'"
-	case 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000, 110000, 120000, 130000, 140000, 150000, 160000, 170000, 180000, 190000, 200000, 210000, 220000, 230000, 240000, 250000, 260000, 270000, 280000, 290000, 300000:
+	case 15000, 30000, 45000, 60000, 75000, 90000, 105000, 120000, 135000, 150000, 165000, 180000, 195000, 210000, 225000, 240000, 255000, 270000, 285000, 300000:
 		whereText = whereText + ", '" + a[0] + "')"
 	default:
 		whereText = whereText + ", '" + a[0] + "'"
 	}
-	if count == 10000 || count == 20000 || count == 30000 ||
-		count == 40000 || count == 50000 || count == 60000 ||
-		count == 70000 || count == 80000 || count == 90000 ||
-		count == 100000 || count == 110000 || count == 120000 ||
-		count == 130000 || count == 140000 || count == 150000 ||
-		count == 160000 || count == 170000 || count == 180000 ||
-		count == 190000 || count == 200000 || count == 210000 ||
-		count == 220000 || count == 230000 || count == 240000 ||
-		count == 250000 || count == 260000 || count == 270000 ||
-		count == 280000 || count == 290000 || count == 300000 {
+	max, _ = strconv.Atoi(a[2])
+	if count == 15000 || count == 30000 || count == 45000 ||
+		count == 60000 || count == 75000 || count == 90000 ||
+		count == 105000 || count == 120000 || count == 135000 ||
+		count == 150000 || count == 165000 || count == 180000 ||
+		count == 195000 || count == 210000 || count == 225000 ||
+		count == 240000 || count == 255000 || count == 270000 ||
+		count == 285000 || count == 300000 {
 		count1++
 		countStr = strconv.Itoa(count1)
 		//whenText = ""
@@ -66,5 +65,45 @@ func bulkUpdate(a []string, pc *sql.DB) {
 		whenText = ""
 		whereText = ""
 		Printf("経過"+countStr+": %vms\n", time.Since(now).Milliseconds())
+		if count == max {
+			count = 0
+			count1 = 0
+			now = time.Now()
+		}
 	}
 }
+
+//func bulkUpdateBak(a []string, pc *sql.DB) {
+//	count++
+//	whenText = whenText + "when '" + a[0] + "' then '" + a[1] + "' \n"
+//	switch count {
+//	case 1, 10001, 20001, 30001, 40001, 50001, 60001, 70001, 80001, 90001, 100001, 110001, 120001, 130001, 140001, 150001, 160001, 170001, 180001, 190001, 200001, 210001, 220001, 230001, 240001, 250001, 260001, 270001, 280001, 290001:
+//		whereText = whereText + "('" + a[0] + "'"
+//	case 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000, 110000, 120000, 130000, 140000, 150000, 160000, 170000, 180000, 190000, 200000, 210000, 220000, 230000, 240000, 250000, 260000, 270000, 280000, 290000, 300000:
+//		whereText = whereText + ", '" + a[0] + "')"
+//	default:
+//		whereText = whereText + ", '" + a[0] + "'"
+//	}
+//	if count == 10000 || count == 20000 || count == 30000 ||
+//		count == 40000 || count == 50000 || count == 60000 ||
+//		count == 70000 || count == 80000 || count == 90000 ||
+//		count == 100000 || count == 110000 || count == 120000 ||
+//		count == 130000 || count == 140000 || count == 150000 ||
+//		count == 160000 || count == 170000 || count == 180000 ||
+//		count == 190000 || count == 200000 || count == 210000 ||
+//		count == 220000 || count == 230000 || count == 240000 ||
+//		count == 250000 || count == 260000 || count == 270000 ||
+//		count == 280000 || count == 290000 || count == 300000 {
+//		count1++
+//		countStr = strconv.Itoa(count1)
+//		//whenText = ""
+//		//whereText = ""
+//		sqlStr := "update public.employees \n set user_code = case user_id \n" +
+//			whenText + " end\n where user_id in \n" +
+//			whereText + ";"
+//		pc.Exec(sqlStr)
+//		whenText = ""
+//		whereText = ""
+//		Printf("経過"+countStr+": %vms\n", time.Since(now).Milliseconds())
+//	}
+//}
