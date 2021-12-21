@@ -4,11 +4,13 @@ import (
 	"database/sql"
 	. "fmt"
 	"github.com/gomodule/redigo/redis"
-	"go_project/model"
-	"go_project/psqlMod/pConnect"
+	"replication/model"
+	"replication/psqlMod/pConnect"
 	"strconv"
 	"time"
 )
+
+var sCount = 0
 
 func SelectAndPub(rc redis.Conn) {
 	now := time.Now()
@@ -22,20 +24,50 @@ func SelectAndPub(rc redis.Conn) {
 	c := strconv.Itoa(checkCount(rows1))
 	Printf("Total count:%s\n", c)
 	for rows.Next() {
+		sCount++
 		var e model.EMPLOYEE
 		rows.Scan(
 			&e.USERID,
 			&e.USERCODE,
 		)
-		//updateUserCode := "update_" + e.USERCODE
-		updateUserCode := e.USERCODE
-		redis.Int(rc.Do(
-			"PUBLISH",
-			"channel_1",
-			e.USERID+","+updateUserCode+","+c))
+		updateUserCode := "update_" + e.USERCODE
+		//updateUserCode := e.USERCODE
+		println(sCount)
+		if sCount == 1 {
+			redis.Int(rc.Do(
+				"PUBLISH",
+				"channel_1",
+				e.USERID+","+updateUserCode+","+c))
+		} else if sCount == 2 {
+			redis.Int(rc.Do(
+				"PUBLISH",
+				"channel_2",
+				e.USERID+","+updateUserCode+","+c))
+		} else if sCount == 3 {
+			redis.Int(rc.Do(
+				"PUBLISH",
+				"channel_3",
+				e.USERID+","+updateUserCode+","+c))
+		} else if sCount == 4 {
+			redis.Int(rc.Do(
+				"PUBLISH",
+				"channel_4",
+				e.USERID+","+updateUserCode+","+c))
+		} else if sCount == 5 {
+			redis.Int(rc.Do(
+				"PUBLISH",
+				"channel_5",
+				e.USERID+","+updateUserCode+","+c))
+		} else {
+			redis.Int(rc.Do(
+				"PUBLISH",
+				"channel_6",
+				e.USERID+","+updateUserCode+","+c))
+			sCount = 0
+		}
 	}
 	Println("*** 終了 ***")
-	Printf("経過1: %vms\n", time.Since(now).Milliseconds())
+	Printf("経過0: %vms\n", time.Since(now).Milliseconds())
 	if err != nil {
 		Errorf("")
 	}

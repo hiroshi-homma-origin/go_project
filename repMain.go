@@ -3,10 +3,10 @@ package main
 import (
 	. "fmt"
 	_ "github.com/gomodule/redigo/redis"
-	"go_project/psqlMod/pConnect"
-	"go_project/redisMod/rConnect"
-	_ "go_project/redisMod/rConnect"
-	"go_project/useCase"
+	"replication/psqlMod/pConnect"
+	"replication/redisMod/rConnect"
+	_ "replication/redisMod/rConnect"
+	"replication/useCase"
 )
 
 func main() {

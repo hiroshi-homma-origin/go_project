@@ -9,23 +9,46 @@ import (
 	"time"
 )
 
-var count = 0
 var count1 = 0
-var max = 0
-var countStr = ""
-var whenText = ""
-var whereText = ""
-var now = time.Now()
+var count2 = 0
+var count3 = 0
+var count4 = 0
+var count5 = 0
+var count6 = 0
+
+var count11 = 0
+
+var whenText1 = ""
+var whereText1 = ""
+
+var whenText2 = ""
+var whereText2 = ""
+
+var whenText3 = ""
+var whereText3 = ""
+
+var whenText4 = ""
+var whereText4 = ""
+
+var whenText5 = ""
+var whereText5 = ""
+
+var whenText6 = ""
+var whereText6 = ""
+
+var countStr1 = ""
+
+var now1 = time.Now()
 
 func UpdateAndSub(rc redis.Conn, pc *sql.DB) {
 	psc := redis.PubSubConn{Conn: rc}
 	//psc.Subscribe("channel_1", "channel_2", "channel_3")
-	psc.Subscribe("channel_1")
+	psc.Subscribe("channel_1", "channel_2", "channel_3", "channel_4", "channel_5", "channel_6")
 	for {
 		switch v := psc.Receive().(type) {
 		case redis.Message:
 			arr1 := strings.Split(string(v.Data), ",")
-			bulkUpdate(arr1, pc)
+			bulkUpdate(arr1, pc, v.Channel)
 			//Println(sqlStr)
 		case redis.Subscription:
 			Printf("%s: %s %d\n", v.Channel, v.Kind, v.Count)
@@ -35,75 +58,112 @@ func UpdateAndSub(rc redis.Conn, pc *sql.DB) {
 	}
 }
 
-func bulkUpdate(a []string, pc *sql.DB) {
-	count++
-	whenText = whenText + "when '" + a[0] + "' then '" + a[1] + "' \n"
-	switch count {
-	case 115000, 30001, 45001, 60001, 75001, 90001, 105001, 120001, 135001, 150001, 165001, 180001, 195001, 210001, 225001, 240001, 255001, 270001, 285001, 300001:
-		whereText = whereText + "('" + a[0] + "'"
-	case 15000, 30000, 45000, 60000, 75000, 90000, 105000, 120000, 135000, 150000, 165000, 180000, 195000, 210000, 225000, 240000, 255000, 270000, 285000, 300000:
-		whereText = whereText + ", '" + a[0] + "')"
+func bulkUpdate(a []string, pc *sql.DB, channel string) {
+	switch channel {
+	case "channel_2":
+		count2++
+		whenText2 = whenText2 + "when '" + a[0] + "' then '" + a[1] + "' \n"
+		switch count2 {
+		case 1, 1001, 2001, 3001, 4001, 5001, 6001, 7001, 8001, 9001:
+			whereText2 = whereText2 + "('" + a[0] + "'"
+		case 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000:
+			whereText2 = whereText2 + ", '" + a[0] + "')"
+			sqlStr2 := "update public.employees \n set user_code = case user_id \n" +
+				whenText2 + " end\n where user_id in \n" +
+				whereText2 + ";"
+			pc.Exec(sqlStr2)
+			whenText2 = ""
+			whereText2 = ""
+		default:
+			whereText2 = whereText2 + ", '" + a[0] + "'"
+		}
+	case "channel_3":
+		count3++
+		whenText3 = whenText3 + "when '" + a[0] + "' then '" + a[1] + "' \n"
+		switch count3 {
+		case 1, 1001, 2001, 3001, 4001, 5001, 6001, 7001, 8001, 9001:
+			whereText3 = whereText3 + "('" + a[0] + "'"
+		case 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000:
+			whereText3 = whereText3 + ", '" + a[0] + "')"
+			sqlStr3 := "update public.employees \n set user_code = case user_id \n" +
+				whenText3 + " end\n where user_id in \n" +
+				whereText3 + ";"
+			pc.Exec(sqlStr3)
+			whenText3 = ""
+			whereText3 = ""
+		default:
+			whereText3 = whereText3 + ", '" + a[0] + "'"
+		}
+	case "channel_4":
+		count4++
+		whenText4 = whenText4 + "when '" + a[0] + "' then '" + a[1] + "' \n"
+		switch count4 {
+		case 1, 1001, 2001, 3001, 4001, 5001, 6001, 7001, 8001, 9001:
+			whereText4 = whereText4 + "('" + a[0] + "'"
+		case 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000:
+			whereText4 = whereText4 + ", '" + a[0] + "')"
+			sqlStr4 := "update public.employees \n set user_code = case user_id \n" +
+				whenText4 + " end\n where user_id in \n" +
+				whereText4 + ";"
+			pc.Exec(sqlStr4)
+			whenText4 = ""
+			whereText4 = ""
+		default:
+			whereText4 = whereText4 + ", '" + a[0] + "'"
+		}
+	case "channel_5":
+		count5++
+		whenText5 = whenText5 + "when '" + a[0] + "' then '" + a[1] + "' \n"
+		switch count5 {
+		case 1, 1001, 2001, 3001, 4001, 5001, 6001, 7001, 8001, 9001:
+			whereText5 = whereText5 + "('" + a[0] + "'"
+		case 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000:
+			whereText5 = whereText5 + ", '" + a[0] + "')"
+			sqlStr5 := "update public.employees \n set user_code = case user_id \n" +
+				whenText5 + " end\n where user_id in \n" +
+				whereText5 + ";"
+			pc.Exec(sqlStr5)
+			whenText5 = ""
+			whereText5 = ""
+		default:
+			whereText5 = whereText5 + ", '" + a[0] + "'"
+		}
+	case "channel_6":
+		count6++
+		whenText6 = whenText6 + "when '" + a[0] + "' then '" + a[1] + "' \n"
+		switch count6 {
+		case 1, 1001, 2001, 3001, 4001, 5001, 6001, 7001, 8001, 9001:
+			whereText6 = whereText6 + "('" + a[0] + "'"
+		case 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000:
+			whereText6 = whereText6 + ", '" + a[0] + "')"
+			sqlStr6 := "update public.employees \n set user_code = case user_id \n" +
+				whenText6 + " end\n where user_id in \n" +
+				whereText6 + ";"
+			pc.Exec(sqlStr6)
+			whenText6 = ""
+			whereText6 = ""
+		default:
+			whereText6 = whereText6 + ", '" + a[0] + "'"
+		}
 	default:
-		whereText = whereText + ", '" + a[0] + "'"
-	}
-	max, _ = strconv.Atoi(a[2])
-	if count == 15000 || count == 30000 || count == 45000 ||
-		count == 60000 || count == 75000 || count == 90000 ||
-		count == 105000 || count == 120000 || count == 135000 ||
-		count == 150000 || count == 165000 || count == 180000 ||
-		count == 195000 || count == 210000 || count == 225000 ||
-		count == 240000 || count == 255000 || count == 270000 ||
-		count == 285000 || count == 300000 {
 		count1++
-		countStr = strconv.Itoa(count1)
-		//whenText = ""
-		//whereText = ""
-		sqlStr := "update public.employees \n set user_code = case user_id \n" +
-			whenText + " end\n where user_id in \n" +
-			whereText + ";"
-		pc.Exec(sqlStr)
-		whenText = ""
-		whereText = ""
-		Printf("経過"+countStr+": %vms\n", time.Since(now).Milliseconds())
-		if count == max {
-			count = 0
-			count1 = 0
-			now = time.Now()
+		whenText1 = whenText1 + "when '" + a[0] + "' then '" + a[1] + "' \n"
+		switch count1 {
+		case 1, 1001, 2001, 3001, 4001, 5001, 6001, 7001, 8001, 9001:
+			whereText1 = whereText1 + "('" + a[0] + "'"
+		case 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000:
+			count11++
+			countStr1 = strconv.Itoa(count11)
+			whereText1 = whereText1 + ", '" + a[0] + "')"
+			sqlStr := "update public.employees \n set user_code = case user_id \n" +
+				whenText1 + " end\n where user_id in \n" +
+				whereText1 + ";"
+			pc.Exec(sqlStr)
+			whenText1 = ""
+			whereText1 = ""
+			Printf("経過_"+countStr1+": %vms\n", time.Since(now1).Milliseconds())
+		default:
+			whereText1 = whereText1 + ", '" + a[0] + "'"
 		}
 	}
 }
-
-//func bulkUpdateBak(a []string, pc *sql.DB) {
-//	count++
-//	whenText = whenText + "when '" + a[0] + "' then '" + a[1] + "' \n"
-//	switch count {
-//	case 1, 10001, 20001, 30001, 40001, 50001, 60001, 70001, 80001, 90001, 100001, 110001, 120001, 130001, 140001, 150001, 160001, 170001, 180001, 190001, 200001, 210001, 220001, 230001, 240001, 250001, 260001, 270001, 280001, 290001:
-//		whereText = whereText + "('" + a[0] + "'"
-//	case 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000, 110000, 120000, 130000, 140000, 150000, 160000, 170000, 180000, 190000, 200000, 210000, 220000, 230000, 240000, 250000, 260000, 270000, 280000, 290000, 300000:
-//		whereText = whereText + ", '" + a[0] + "')"
-//	default:
-//		whereText = whereText + ", '" + a[0] + "'"
-//	}
-//	if count == 10000 || count == 20000 || count == 30000 ||
-//		count == 40000 || count == 50000 || count == 60000 ||
-//		count == 70000 || count == 80000 || count == 90000 ||
-//		count == 100000 || count == 110000 || count == 120000 ||
-//		count == 130000 || count == 140000 || count == 150000 ||
-//		count == 160000 || count == 170000 || count == 180000 ||
-//		count == 190000 || count == 200000 || count == 210000 ||
-//		count == 220000 || count == 230000 || count == 240000 ||
-//		count == 250000 || count == 260000 || count == 270000 ||
-//		count == 280000 || count == 290000 || count == 300000 {
-//		count1++
-//		countStr = strconv.Itoa(count1)
-//		//whenText = ""
-//		//whereText = ""
-//		sqlStr := "update public.employees \n set user_code = case user_id \n" +
-//			whenText + " end\n where user_id in \n" +
-//			whereText + ";"
-//		pc.Exec(sqlStr)
-//		whenText = ""
-//		whereText = ""
-//		Printf("経過"+countStr+": %vms\n", time.Since(now).Milliseconds())
-//	}
-//}
