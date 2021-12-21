@@ -18,7 +18,8 @@ func main() {
 	defer conn.Close()
 	defer pc.Close()
 
-	useCase.UpdateAndSub(conn, pc)
+	//useCase.UpdateAndSub(conn, pc)
+	useCase.SelectAndPub(conn)
 
 	if err != nil {
 		panic(err)
