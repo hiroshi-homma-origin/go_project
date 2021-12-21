@@ -3,10 +3,10 @@ package main
 import (
 	. "fmt"
 	_ "github.com/gomodule/redigo/redis"
-	"replication/psqlMod/pConnect"
-	"replication/redisMod/rConnect"
+	"go_project/psqlMod/pConnect"
+	"go_project/redisMod/rConnect"
+	"go_project/useCase"
 	_ "replication/redisMod/rConnect"
-	"replication/useCase"
 )
 
 func main() {
@@ -18,8 +18,8 @@ func main() {
 	defer conn.Close()
 	defer pc.Close()
 
-	//useCase.UpdateAndSub(conn, pc)
-	useCase.SelectAndPub(conn)
+	useCase.UpdateAndSub(conn, pc)
+	//useCase.SelectAndPub(conn)
 
 	if err != nil {
 		panic(err)
