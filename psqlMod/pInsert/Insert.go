@@ -8,7 +8,17 @@ import (
 	_ "time"
 )
 
-const n = 300000
+const n1 = 0
+const n2 = 500000
+const n3 = 1000000
+const n4 = 1500000
+const n5 = 2000000
+const n6 = 2500000
+const n7 = 3000000
+const n8 = 3500000
+const n9 = 4000000
+const n10 = 4500000
+const n11 = 5000000
 
 func Insert() {
 	now := time.Now()
@@ -19,12 +29,12 @@ func Insert() {
 	db, err := pConnect.RedisConnection()
 	defer db.Close()
 
-	_, _ = db.Exec("drop table employees")
+	//_, _ = db.Exec("drop table employees")
 
-	sqlStr := "CREATE TABLE IF NOT EXISTS public.employees(id SERIAL NOT NULL, user_id text NOT NULL, user_code text NOT NULL, test_content1 text NOT NULL, test_content2 text NOT NULL, test_content3 text NOT NULL, test_content4 text NOT NULL, test_content5 text NOT NULL, test_content6 text NOT NULL, test_content7 text NOT NULL, test_content8 text NOT NULL, test_content9 text NOT NULL, created text NOT NULL, CONSTRAINT employees_pkey PRIMARY KEY (id))"
-	Println(sqlStr)
+	//sqlStr := "CREATE TABLE IF NOT EXISTS public.employees(id SERIAL NOT NULL, user_id text NOT NULL, user_code text NOT NULL, test_content1 text NOT NULL, test_content2 text NOT NULL, test_content3 text NOT NULL, test_content4 text NOT NULL, test_content5 text NOT NULL, test_content6 text NOT NULL, test_content7 text NOT NULL, test_content8 text NOT NULL, test_content9 text NOT NULL, created text NOT NULL, CONSTRAINT employees_pkey PRIMARY KEY (id))"
+	//Println(sqlStr)
 
-	_, _ = db.Exec(sqlStr)
+	//_, _ = db.Exec(sqlStr)
 
 	for key := range dictAa {
 		userId := dictAa[key]["user_id"].(string)
@@ -53,7 +63,7 @@ func Insert() {
 			"'" + testContent9 + "'," +
 			"'" + created + "'" +
 			")"
-		Println(sqlStr)
+		//Println(sqlStr)
 		_, _ = db.Exec(sqlStr)
 	}
 
@@ -67,7 +77,17 @@ func Insert() {
 // ----------------------------------------------------------------
 func dataPrepareProc() map[int]map[string]interface{} {
 	dictAa := make(map[int]map[string]interface{})
-	for i := 0; i < n; i++ {
+	for i := n1; i < n2; i++ {
+		//for i := n2; i < n3; i++ {
+		//for i := n3; i < n4; i++ {
+		//for i := n4; i < n5; i++ {
+		//for i := n5; i < n6; i++ {
+		//for i := n6; i < n7; i++ {
+		//for i := n7; i < n8; i++ {
+		//for i := n8; i < n9; i++ {
+		//for i := n9; i < n10; i++ {
+		//for i := n10; i < n11; i++ {
+		Printf("insert_data:%d\n", i)
 		userId := Sprintf("user_id_%d", i)
 		userCode := Sprintf("user_code_%d", i)
 		testContent1 := Sprintf("test_content1_%d", i)

@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	. "fmt"
 	"github.com/gomodule/redigo/redis"
-	"replication/model"
-	"replication/psqlMod/pConnect"
+	"go_project/model"
+	"go_project/psqlMod/pConnect"
 	"strconv"
 	"time"
 )
@@ -19,14 +19,15 @@ func SelectAndPub(rc redis.Conn) {
 	db, err := pConnect.RedisConnection()
 	defer db.Close()
 
-	rows, err := db.Query("SELECT user_id, user_code FROM employees")
-	rows1, _ := db.Query("SELECT COUNT(*) as count FROM employees")
+	rows, err := db.Query("SELECT id, user_id, user_code FROM employees where id < 20001")
+	rows1, _ := db.Query("SELECT COUNT(*) as count FROM employees where id < 20001")
 	c := strconv.Itoa(checkCount(rows1))
 	Printf("Total count:%s\n", c)
 	for rows.Next() {
 		sCount++
 		var e model.EMPLOYEE
 		rows.Scan(
+			&e.ID,
 			&e.USERID,
 			&e.USERCODE,
 		)
@@ -38,30 +39,10 @@ func SelectAndPub(rc redis.Conn) {
 				"PUBLISH",
 				"channel_1",
 				e.USERID+","+updateUserCode+","+c))
-		} else if sCount == 2 {
-			redis.Int(rc.Do(
-				"PUBLISH",
-				"channel_2",
-				e.USERID+","+updateUserCode+","+c))
-		} else if sCount == 3 {
-			redis.Int(rc.Do(
-				"PUBLISH",
-				"channel_3",
-				e.USERID+","+updateUserCode+","+c))
-		} else if sCount == 4 {
-			redis.Int(rc.Do(
-				"PUBLISH",
-				"channel_4",
-				e.USERID+","+updateUserCode+","+c))
-		} else if sCount == 5 {
-			redis.Int(rc.Do(
-				"PUBLISH",
-				"channel_5",
-				e.USERID+","+updateUserCode+","+c))
 		} else {
 			redis.Int(rc.Do(
 				"PUBLISH",
-				"channel_6",
+				"channel_2",
 				e.USERID+","+updateUserCode+","+c))
 			sCount = 0
 		}

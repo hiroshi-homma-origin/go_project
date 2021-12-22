@@ -11,44 +11,31 @@ import (
 
 var count1 = 0
 var count2 = 0
-var count3 = 0
-var count4 = 0
-var count5 = 0
-var count6 = 0
 
 var count11 = 0
+var count12 = 0
 
 var whenText1 = ""
-var whereText1 = ""
+var wheretext11 = ""
+var wheretext12 = ""
 
 var whenText2 = ""
-var whereText2 = ""
-
-var whenText3 = ""
-var whereText3 = ""
-
-var whenText4 = ""
-var whereText4 = ""
-
-var whenText5 = ""
-var whereText5 = ""
-
-var whenText6 = ""
-var whereText6 = ""
+var wheretext21 = ""
+var wheretext22 = ""
 
 var countStr1 = ""
+var countStr2 = ""
 
 var now1 = time.Now()
 
 func UpdateAndSub(rc redis.Conn, pc *sql.DB) {
 	psc := redis.PubSubConn{Conn: rc}
-	psc.Subscribe("channel_1", "channel_2", "channel_3", "channel_4", "channel_5", "channel_6")
+	psc.Subscribe("channel_1", "channel_2")
 	for {
 		switch v := psc.Receive().(type) {
 		case redis.Message:
 			arr1 := strings.Split(string(v.Data), ",")
-			bulkUpdate(arr1, pc, v.Channel)
-			//Println(sqlStr)
+			bulkUpdate(arr1, v.Channel, pc)
 		case redis.Subscription:
 			Printf("%s: %s %d\n", v.Channel, v.Kind, v.Count)
 		case error:
@@ -57,161 +44,71 @@ func UpdateAndSub(rc redis.Conn, pc *sql.DB) {
 	}
 }
 
-func bulkUpdate(a []string, pc *sql.DB, channel string) {
+func bulkUpdate(a []string, channel string, pc *sql.DB) {
 	switch channel {
 	case "channel_1":
+		count1++
 		whenText1 = whenText1 + "when '" + a[0] + "' then '" + a[1] + "' \n"
 		switch count1 {
-		case 0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000,
-			11000, 12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000,
-			21000, 22000, 23000, 24000, 25000, 26000, 27000, 28000, 29000, 30000,
-			31000, 32000, 33000, 34000, 35000, 36000, 37000, 38000, 39000, 40000,
-			41000, 42000, 43000, 44000, 45000, 46000, 47000, 48000, 49000:
-			whereText1 = whereText1 + "('" + a[0] + "'"
-		case 999, 1999, 2999, 3999, 4999, 5999, 6999, 7999, 8999, 9999, 10999,
-			11999, 12999, 13999, 14999, 15999, 16999, 17999, 18999, 19999, 20999,
-			21999, 22999, 23999, 24999, 25999, 26999, 27999, 28999, 29999, 30999,
-			31999, 32999, 33999, 34999, 35999, 36999, 37999, 38999, 39999, 40999,
-			41999, 42999, 43999, 44999, 45999, 46999, 47999, 48999, 49999:
+		case 1:
+			wheretext11 = wheretext11 + "('" + a[0] + "'"
+			wheretext12 = wheretext12 + "(" + a[3] + ""
+		case 500:
 			count11++
 			countStr1 = strconv.Itoa(count11)
-			whereText1 = whereText1 + ", '" + a[0] + "')"
-			sqlStr := "update public.employees \n set user_code = case user_id \n" +
-				whenText1 + " end\n where user_id in \n" +
-				whereText1 + ";"
-			pc.Exec(sqlStr)
+			wheretext11 = wheretext11 + ", '" + a[0] + "')"
+			wheretext12 = wheretext12 + ", " + a[3] + ")"
+			transaction(whenText1, wheretext11, wheretext12, pc)
+			//Println("check_data1:"+whereText1)
+			Printf("経過1_"+countStr1+": %vms\n", time.Since(now1).Milliseconds())
 			whenText1 = ""
-			whereText1 = ""
-			Printf("経過_"+countStr1+": %vms\n", time.Since(now1).Milliseconds())
+			wheretext11 = ""
+			wheretext12 = ""
+			if count11 == 5000 {
+				count11 = 0
+			}
+			if count1 == 500 {
+				count1 = 0
+			}
 		default:
-			whereText1 = whereText1 + ", '" + a[0] + "'"
+			wheretext11 = wheretext11 + ", '" + a[0] + "'"
+			wheretext12 = wheretext12 + ", " + a[3]
 		}
-		count1++
-		Printf("count1:%d \n", count1)
 	case "channel_2":
+		count2++
 		whenText2 = whenText2 + "when '" + a[0] + "' then '" + a[1] + "' \n"
 		switch count2 {
-		case 0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000,
-			11000, 12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000,
-			21000, 22000, 23000, 24000, 25000, 26000, 27000, 28000, 29000, 30000,
-			31000, 32000, 33000, 34000, 35000, 36000, 37000, 38000, 39000, 40000,
-			41000, 42000, 43000, 44000, 45000, 46000, 47000, 48000, 49000:
-			whereText2 = whereText2 + "('" + a[0] + "'"
-		case 999, 1999, 2999, 3999, 4999, 5999, 6999, 7999, 8999, 9999, 10999,
-			11999, 12999, 13999, 14999, 15999, 16999, 17999, 18999, 19999, 20999,
-			21999, 22999, 23999, 24999, 25999, 26999, 27999, 28999, 29999, 30999,
-			31999, 32999, 33999, 34999, 35999, 36999, 37999, 38999, 39999, 40999,
-			41999, 42999, 43999, 44999, 45999, 46999, 47999, 48999, 49999:
-			whereText2 = whereText2 + ", '" + a[0] + "')"
-			sqlStr2 := "update public.employees \n set user_code = case user_id \n" +
-				whenText2 + " end\n where user_id in \n" +
-				whereText2 + ";"
-			pc.Exec(sqlStr2)
+		case 1:
+			wheretext21 = wheretext21 + "('" + a[0] + "'"
+			wheretext22 = wheretext22 + "(" + a[3] + ""
+		case 500:
+			count12++
+			countStr2 = strconv.Itoa(count12)
+			wheretext21 = wheretext21 + ", '" + a[0] + "')"
+			wheretext22 = wheretext22 + ", " + a[3] + ")"
+			transaction(whenText2, wheretext21, wheretext22, pc)
+			//Println("check_data1:"+whereText1)
+			Printf("経過2_"+countStr2+": %vms\n", time.Since(now1).Milliseconds())
 			whenText2 = ""
-			whereText2 = ""
+			wheretext21 = ""
+			wheretext22 = ""
+			if count12 == 5000 {
+				count12 = 0
+			}
+			if count2 == 500 {
+				count2 = 0
+			}
 		default:
-			whereText2 = whereText2 + ", '" + a[0] + "'"
+			wheretext21 = wheretext21 + ", '" + a[0] + "'"
+			wheretext22 = wheretext22 + ", " + a[3]
 		}
-		count2++
-	case "channel_3":
-		whenText3 = whenText3 + "when '" + a[0] + "' then '" + a[1] + "' \n"
-		switch count3 {
-		case 0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000,
-			11000, 12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000,
-			21000, 22000, 23000, 24000, 25000, 26000, 27000, 28000, 29000, 30000,
-			31000, 32000, 33000, 34000, 35000, 36000, 37000, 38000, 39000, 40000,
-			41000, 42000, 43000, 44000, 45000, 46000, 47000, 48000, 49000:
-			whereText3 = whereText3 + "('" + a[0] + "'"
-		case 999, 1999, 2999, 3999, 4999, 5999, 6999, 7999, 8999, 9999, 10999,
-			11999, 12999, 13999, 14999, 15999, 16999, 17999, 18999, 19999, 20999,
-			21999, 22999, 23999, 24999, 25999, 26999, 27999, 28999, 29999, 30999,
-			31999, 32999, 33999, 34999, 35999, 36999, 37999, 38999, 39999, 40999,
-			41999, 42999, 43999, 44999, 45999, 46999, 47999, 48999, 49999:
-			whereText3 = whereText3 + ", '" + a[0] + "')"
-			sqlStr3 := "update public.employees \n set user_code = case user_id \n" +
-				whenText3 + " end\n where user_id in \n" +
-				whereText3 + ";"
-			pc.Exec(sqlStr3)
-			whenText3 = ""
-			whereText3 = ""
-		default:
-			whereText3 = whereText3 + ", '" + a[0] + "'"
-		}
-		count3++
-	case "channel_4":
-		whenText4 = whenText4 + "when '" + a[0] + "' then '" + a[1] + "' \n"
-		switch count4 {
-		case 0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000,
-			11000, 12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000,
-			21000, 22000, 23000, 24000, 25000, 26000, 27000, 28000, 29000, 30000,
-			31000, 32000, 33000, 34000, 35000, 36000, 37000, 38000, 39000, 40000,
-			41000, 42000, 43000, 44000, 45000, 46000, 47000, 48000, 49000:
-			whereText4 = whereText4 + "('" + a[0] + "'"
-		case 999, 1999, 2999, 3999, 4999, 5999, 6999, 7999, 8999, 9999, 10999,
-			11999, 12999, 13999, 14999, 15999, 16999, 17999, 18999, 19999, 20999,
-			21999, 22999, 23999, 24999, 25999, 26999, 27999, 28999, 29999, 30999,
-			31999, 32999, 33999, 34999, 35999, 36999, 37999, 38999, 39999, 40999,
-			41999, 42999, 43999, 44999, 45999, 46999, 47999, 48999, 49999:
-			whereText4 = whereText4 + ", '" + a[0] + "')"
-			sqlStr4 := "update public.employees \n set user_code = case user_id \n" +
-				whenText4 + " end\n where user_id in \n" +
-				whereText4 + ";"
-			pc.Exec(sqlStr4)
-			whenText4 = ""
-			whereText4 = ""
-		default:
-			whereText4 = whereText4 + ", '" + a[0] + "'"
-		}
-		count4++
-	case "channel_5":
-		whenText5 = whenText5 + "when '" + a[0] + "' then '" + a[1] + "' \n"
-		switch count5 {
-		case 0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000,
-			11000, 12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000,
-			21000, 22000, 23000, 24000, 25000, 26000, 27000, 28000, 29000, 30000,
-			31000, 32000, 33000, 34000, 35000, 36000, 37000, 38000, 39000, 40000,
-			41000, 42000, 43000, 44000, 45000, 46000, 47000, 48000, 49000:
-			whereText5 = whereText5 + "('" + a[0] + "'"
-		case 999, 1999, 2999, 3999, 4999, 5999, 6999, 7999, 8999, 9999, 10999,
-			11999, 12999, 13999, 14999, 15999, 16999, 17999, 18999, 19999, 20999,
-			21999, 22999, 23999, 24999, 25999, 26999, 27999, 28999, 29999, 30999,
-			31999, 32999, 33999, 34999, 35999, 36999, 37999, 38999, 39999, 40999,
-			41999, 42999, 43999, 44999, 45999, 46999, 47999, 48999, 49999:
-			whereText5 = whereText5 + ", '" + a[0] + "')"
-			sqlStr5 := "update public.employees \n set user_code = case user_id \n" +
-				whenText5 + " end\n where user_id in \n" +
-				whereText5 + ";"
-			pc.Exec(sqlStr5)
-			whenText5 = ""
-			whereText5 = ""
-		default:
-			whereText5 = whereText5 + ", '" + a[0] + "'"
-		}
-		count5++
-	case "channel_6":
-		whenText6 = whenText6 + "when '" + a[0] + "' then '" + a[1] + "' \n"
-		switch count6 {
-		case 0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000,
-			11000, 12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000,
-			21000, 22000, 23000, 24000, 25000, 26000, 27000, 28000, 29000, 30000,
-			31000, 32000, 33000, 34000, 35000, 36000, 37000, 38000, 39000, 40000,
-			41000, 42000, 43000, 44000, 45000, 46000, 47000, 48000, 49000:
-			whereText6 = whereText6 + "('" + a[0] + "'"
-		case 999, 1999, 2999, 3999, 4999, 5999, 6999, 7999, 8999, 9999, 10999,
-			11999, 12999, 13999, 14999, 15999, 16999, 17999, 18999, 19999, 20999,
-			21999, 22999, 23999, 24999, 25999, 26999, 27999, 28999, 29999, 30999,
-			31999, 32999, 33999, 34999, 35999, 36999, 37999, 38999, 39999, 40999,
-			41999, 42999, 43999, 44999, 45999, 46999, 47999, 48999, 49999:
-			whereText6 = whereText6 + ", '" + a[0] + "')"
-			sqlStr6 := "update public.employees \n set user_code = case user_id \n" +
-				whenText6 + " end\n where user_id in \n" +
-				whereText6 + ";"
-			pc.Exec(sqlStr6)
-			whenText6 = ""
-			whereText6 = ""
-		default:
-			whereText6 = whereText6 + ", '" + a[0] + "'"
-		}
-		count6++
 	}
+}
+
+func transaction(whenStr string, whereStr1 string, whereStr2 string, pc *sql.DB) {
+	sqlStr := "update public.employees \n set user_code = case user_id \n" +
+		whenStr + " end\n where user_id in \n" +
+		whereStr1 + " AND id in " +
+		whereStr2 + ";"
+	pc.Exec(sqlStr)
 }
